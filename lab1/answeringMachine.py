@@ -1,0 +1,8 @@
+print("Hello, you are trying to reach Connor Hill")
+name= input("Please enter your name: ")
+method= input("Please give a contact method: ")
+reason= input("Please say the reason you are trying to contact: ")
+print("Thank you for your message")
+print("your name is", name)
+print("Your method of contact is", method)
+print("your reason for contact is", reason)
