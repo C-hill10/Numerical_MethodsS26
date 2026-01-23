@@ -25,22 +25,28 @@ class ConnectFourBoard:
             print(f'\t|{"|".join(self.rows[row])}|')
         print('\t ' + ' '.join([str(col) for col in range(self.num_cols)]))
 
-    def check_winner(self):
+    def check_winner(self,row,col,symbol):
         """Check whether someone has won the game."""
+        check_bounds=
         # TODO: Implement this function instead of just returning false
         return False
 
     def is_full(self):
         """Check whether the board is full."""
+        for col in range(self.num_cols):
+            if self.rows[0][col] == _EMPTY:
+                return False
         # TODO: Implement this function instead of just returning false
-        return False
+        return True
 
     def add_piece(self, col, symbol):
         """Add a piece to the specified column."""
         # TODO: Add code to check if the move is valid (and raise InvalidMoveError if not)
-
+        if self.rows[num_rows-1][col] != _EMPTY:
+            raise InvalidMoveError("This column is full! please place somewhere else")
         # Find the first empty row in col and replace it with symbol
         for row in reversed(range(self.num_rows)):
             if self.rows[row][col] is _EMPTY:
                 self.rows[row][col] = symbol
                 break
+        check_winner()

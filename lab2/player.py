@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-
+import random
 
 class AbstractPlayer(ABC):
     def __init__(self, symbol, name):
@@ -18,3 +18,6 @@ class ConsolePlayer(AbstractPlayer):
 
 
 # TODO: Create a CPUPlayer class which selects moves without user intervention
+class CPUPlayer(AbstractPlayer):
+    def move(self, **kwargs):
+        move_choice=randint(0,)
