@@ -51,6 +51,15 @@ class ConnectFourBoard:
         if num_down>= 3:
             return True
         #diagonal checks, this one will be on the diagonal towards the top right
+        row_check=row
+        col_check=col
+        num_up_right=0
+        num_down_right=0
+        while (row_check>=1 and col_check <=self.num_cols-1) and self.rows[row_check-1][col_check+1]==symbol:
+            num_up_right+=1
+            row_check-=1
+            col_check+=1
+        
         # TODO: Implement this function instead of just returning false
         return False
 
