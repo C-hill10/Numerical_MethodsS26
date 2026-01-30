@@ -83,7 +83,11 @@ class ConnectFourGame:
 
 if __name__ == "__main__":
     # Play a new connect 4 game
-    game = ConnectFourGame()
+    two_player=input('would you like to play two player? (y/N): ').lower().startswith('y')
+    if two_player:
+        game = ConnectFourGame()
+    else:
+        game= ConnectFourGame(p2_type=CPUPlayer)
 
     keep_playing = True
     while keep_playing:

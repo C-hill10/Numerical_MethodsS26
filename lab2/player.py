@@ -21,3 +21,4 @@ class ConsolePlayer(AbstractPlayer):
 class CPUPlayer(AbstractPlayer):
     def move(self, **kwargs):
         move_choice=random.randint(0,6)
+        return move_choice
