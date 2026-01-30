@@ -42,13 +42,14 @@ class ConnectFourGame:
 
             # Display the board
             self.board.display()
-
+            column_move=0
+            row_move=0
             # Get the next player's move
             move_is_invalid = True
             while move_is_invalid: # Keep trying until we get a valid move
-                col = current_player.move()
+                column_move = current_player.move()
                 try:
-                    self.board.add_piece(col, current_player.symbol)
+                    row_move = self.board.add_piece(column_move, current_player.symbol)
                     move_is_invalid = False # If we make it to this line, move was valid
                 except InvalidMoveError as err:
                  print(err)# Otherwise display why the move was not valid
@@ -57,7 +58,7 @@ class ConnectFourGame:
             self.turn += 1
 
             # Check for winners
-            if self.board.check_winner(current_player.symbol):
+            if self.board.check_winner(current_player.symbol,column_move,row_move):
                 print(f'{current_player.name} wins!')
                 break # Get out of the while loop without triggering the else clause
         else:

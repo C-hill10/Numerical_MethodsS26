@@ -20,4 +20,4 @@ class ConsolePlayer(AbstractPlayer):
 # TODO: Create a CPUPlayer class which selects moves without user intervention
 class CPUPlayer(AbstractPlayer):
     def move(self, **kwargs):
-        move_choice=random.randint(0,)
+        move_choice=random.randint(0,6)
