@@ -8,7 +8,7 @@ class Maze:
 
     def __init__(self, size=8):
         """Initialize a new, random maze"""
-        self.shape = (2*size + 1,)*2 # Twice as large as the actual maze (includes space for walls)
+        self.shape = (2*size + 1,)*2 # 4x as large as the actual maze (includes space for walls)
         self.start_position = (0,)*2 # Upper left corner
         self.goal_position = (size - 1,)*2 # Lower right corner
         self.maze = np.zeros(shape=self.shape, dtype=int) # Start with all walls
