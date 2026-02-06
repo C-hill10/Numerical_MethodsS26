@@ -54,11 +54,36 @@ class ConnectFourBoard:
         row_check=row
         col_check=col
         num_up_right=0
+        num_down_left=0
         num_down_right=0
-        while (row_check>=1 and col_check <=self.num_cols-1) and self.rows[row_check-1][col_check+1]==symbol:
+        num_up_left=0
+        while (row_check>=1 and col_check <self.num_cols-1) and self.rows[row_check-1][col_check+1]==symbol:
             num_up_right+=1
             row_check-=1
             col_check+=1
+        #check down left
+        row_check=row
+        col_check=col
+        while ((row_check<self.num_rows-1) and (col_check >= 1)) and self.rows[row_check+1][col_check-1]==symbol:
+            num_down_left+=1
+            row_check+=1
+            col_check-=1
+        if num_up_right+num_down_left>=3:
+            return True
+        #now we do left facing diagonal, start looking up left, col down and row down
+        while (row_check>=1 and col_check >=1) and self.rows[row_check-1][col_check-1]==symbol:
+            num_up_left+=1
+            row_check-=1
+            col_check-=1
+        #check down right, col increases and row increases
+        row_check=row
+        col_check=col
+        while ((row_check<self.num_rows-1) and (col_check < self.num_cols-1)) and self.rows[row_check+1][col_check+1]==symbol:
+            num_down_right+=1
+            row_check+=1
+            col_check+=1
+        if num_up_left+num_down_right>=3:
+            return True
         
         # TODO: Implement this function instead of just returning false
         return False
