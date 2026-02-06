@@ -99,6 +99,8 @@ class ConnectFourBoard:
     def add_piece(self, col, symbol):
         """Add a piece to the specified column."""
         # TODO: Add code to check if the move is valid (and raise InvalidMoveError if not)
+        if not isinstance(col,int):
+            raise InvalidMoveError("that's not an int!!!")
         if col > self.num_cols:
             raise InvalidMoveError('Column out of range')
         if self.rows[0][col] != _EMPTY:

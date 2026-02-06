@@ -71,12 +71,11 @@ class ConnectFourGame:
         while symbol_is_invalid:
             symbol = input(f'Enter a character to use as a symbol for {player_name}: ')
             symbol = symbol.strip() # Remove leading and trailing whitespace
-            symbol = symbol[0] # Only keep the first character, ignore everything else
-            if not symbol:
+            if symbol=="":
                 print('Symbol must not be a whitespace character!')
             else:
                 # Get positive confirmation from the player
-                confirmation = input(f'Use "{symbol}" for {player_name}? (y/N): ')
+                confirmation = input(f'Use "{symbol[0]}" for {player_name}? (y/N): ')
                 symbol_is_invalid = not confirmation.lower().startswith('y')
         return symbol
 

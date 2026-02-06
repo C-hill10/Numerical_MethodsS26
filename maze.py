@@ -39,7 +39,20 @@ class Maze:
         generate_maze_from_cell(self.goal_position)
         # self.maze[0:2, 0:2] = _FLOOR # Indicate start area. May remove this if desired.
         # self.maze[-2:, -2:] = _FLOOR # Indicate goal area. May remove this if desired.
-
+    def up(self,player_position):
+    x,y=player_position
+    if y-1<0 and self.maze[x][y-1] !=0:
+        self.maze[x][y-1]=2
+        self.maze[x][y]=1
+        player_position=x,y-1
+        plt.show()
+def down(Maze,player_position):
+    x,y=player_position
+    if y+1<Maze.size*2-2 and Maze.maze[x][y+1] !=0:
+        Maze.maze[x][y+1]=2
+        Maze.maze[x][y]=1
+        player_position=x,y+1
+        plt.show()        
     def display(self):
         """Display the maze, using block characters for floors and empty spaces for walls"""
         str_maze = np.where(self.maze, '██', '  ')
