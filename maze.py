@@ -8,9 +8,11 @@ class Maze:
 
     def __init__(self, size=8):
         """Initialize a new, random maze"""
+        self.size=size
         self.shape = (2*size + 1,)*2 # 4x as large as the actual maze (includes space for walls)
         self.start_position = (0,)*2 # Upper left corner
         self.goal_position = (size - 1,)*2 # Lower right corner
+        self.player_position=(1,1)
         self.maze = np.zeros(shape=self.shape, dtype=int) # Start with all walls
         # Randomly initialize the maze with a depth-first search
         visited = np.zeros(shape=(size,size), dtype=int)
@@ -39,20 +41,42 @@ class Maze:
         generate_maze_from_cell(self.goal_position)
         # self.maze[0:2, 0:2] = _FLOOR # Indicate start area. May remove this if desired.
         # self.maze[-2:, -2:] = _FLOOR # Indicate goal area. May remove this if desired.
-    def up(self,player_position):
-    x,y=player_position
-    if y-1<0 and self.maze[x][y-1] !=0:
-        self.maze[x][y-1]=2
-        self.maze[x][y]=1
-        player_position=x,y-1
-        plt.show()
-def down(Maze,player_position):
-    x,y=player_position
-    if y+1<Maze.size*2-2 and Maze.maze[x][y+1] !=0:
-        Maze.maze[x][y+1]=2
-        Maze.maze[x][y]=1
-        player_position=x,y+1
-        plt.show()        
+    def up(self):
+        x,y=self.player_position
+        if x>=1 and self.maze[x-1][y] !=0:
+            self.maze[x-1][y]=2
+            self.maze[x][y]=1
+            self.player_position=x-1,y
+            print(f"moving to {self.player_position}")
+        else:
+            print("you can't go that way")
+    def down(self):
+        x,y=self.player_position
+        if x<self.size*2-2 and self.maze[x+1][y] !=0:
+            self.maze[x+1][y]=2
+            self.maze[x][y]=1
+            self.player_position=x+1,y
+            print(f"moving to {self.player_position}")
+        else:
+            print("You can't go that way") 
+    def left(self):
+        x,y=self.player_position
+        if y>2 and self.maze[x][y-1] !=0:
+            self.maze[x][y-1]=2
+            self.maze[x][y]=1
+            self.player_position=x,y-1
+            print(f"moving to {self.player_position}")
+        else:
+            print("You can't go that way")
+    def right(self):
+        x,y=self.player_position
+        if y<self.size*2 -2 and self.maze[x][y+1] !=0:
+            self.maze[x][y+1]=2
+            self.maze[x][y]=1
+            self.player_position=x,y+1
+            print(f"moving to {self.player_position}")
+        else:
+            print("You can't go that way")     
     def display(self):
         """Display the maze, using block characters for floors and empty spaces for walls"""
         str_maze = np.where(self.maze, '██', '  ')

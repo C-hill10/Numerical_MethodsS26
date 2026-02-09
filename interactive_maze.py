@@ -4,19 +4,33 @@ import numpy as np
 from maze import Maze
 import maze_move
 # TODO: Write code to make the maze interactive.
+class Mover:
+    def __init__(self, Maze,figure):
+        self.maze=Maze
+        self.fig=figure
+    def up_move(self, event):
+        self.maze.up()
+        self.fig.canvas.draw()
+    def down_move(self, event):
+        self.maze.down()
+        self.fig.canvas.draw()
+    def right_move(self, event):
+        self.maze.right()
+        self.fig.canvas.draw()
+    def left_move(self, event):
+        self.maze.left()
+        self.fig.canvas.draw()
 
 # TODO: Visualize the maze using matplotlib.
 player_position=(1,1)
 if __name__ == "__main__":
-    # Any code in this block will be run when this file is executed directly
-    print("You must have run `python interactive_maze.py`\n Generating a maze")
     labyrinth= Maze(10)
     color_map=mpl.colors.ListedColormap(['Gray','Black','Blue','Red'])
-    # plt.ion()
     end_position=(9,9)
     labyrinth.maze[1][1]=2
     labyrinth.maze[9][9]=4
     fig,ax=plt.subplots()
+    helper=Mover(labyrinth,fig)
     mpl.pyplot.imshow(labyrinth.maze,color_map)
     plt.subplots_adjust(bottom=0.3)
     ax_left=fig.add_axes([0.35, 0.05, 0.1, 0.075])
@@ -27,47 +41,11 @@ if __name__ == "__main__":
     bdown=mpl.widgets.Button(ax_down,'Down')
     bright=mpl.widgets.Button(ax_right,'Right')
     bup=mpl.widgets.Button(ax_up,'Up')
-    bdown.on_clicked(maze_move.down(labyrinth,player_position))
+    bdown.on_clicked(helper.down_move)
+    bright.on_clicked(helper.right_move)
+    bleft.on_clicked(helper.left_move)
+    bup.on_clicked(helper.up_move)
     mpl.pyplot.show()
-    # right_button= mpl.widgets.Button()
-    # left_button=mpl.widgets.Button()
-    # while player_position != end_position:
-    #     key=keyboard.read_key()
-    #     x,y=player_position
-    #     if key == "w":
-    #         try:
-    #             if labyrinth.maze[x][y+1] != 0:
-    #                 player_position=(x,y+1)
-    #                 labyrinth.maze[x,y]=1
-    #                 labyrinth.maze[x,y+1]=2
-    #         except:
-    #             print("you can't go that way!")
-    #     elif key == "a":
-    #         try:
-    #             if labyrinth.maze[x-1][y] != 0:
-    #                 player_position=(x-1,y)
-    #                 labyrinth.maze[x,y]=1
-    #                 labyrinth.maze[x-1,y]=2
-    #         except:
-    #             print("you can't go that way!")
-    #     elif key == "s":
-    #         try:
-    #             if labyrinth.maze[x][y-1] != 0:
-    #                 player_position=(x,y-1)
-    #                 labyrinth.maze[x,y]=1
-    #                 labyrinth.maze[x,y-1]=2
-    #         except:
-    #             print("you can't go that way!")
-    #     elif key == "d":
-    #         try:
-    #             if labyrinth.maze[x+1][y] != 0:
-    #                 player_position=(x+1,y)
-    #                 labyrinth.maze[x,y]=1
-    #                 labyrinth.maze[x+1,y]=2
-    #         except:
-    #             print("you can't go that way!")
-    #     else:
-    #         print("Invalid keypress, please try again")
-    #     mpl.pyplot.imshow(labyrinth.maze,color_map)
-    #    mpl.pyplot.show()
+    plt.ion()
+
 
