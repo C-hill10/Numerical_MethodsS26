@@ -2,25 +2,32 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
 from maze import Maze
-import maze_move
 # TODO: Write code to make the maze interactive.
 class Mover:
-    def __init__(self, Maze,figure):
+    def __init__(self, Maze,figure,Color_map):
         self.maze=Maze
         self.fig=figure
+        self.map=Color_map
     def up_move(self, event):
         self.maze.up()
+        plt.imshow(self.maze.maze,self.map)
         self.fig.canvas.draw()
+        print(self.maze.maze)
     def down_move(self, event):
         self.maze.down()
         self.fig.canvas.draw()
+        plt.imshow(self.maze.maze,self.map)
+        print(self.maze.maze)
     def right_move(self, event):
         self.maze.right()
+        plt.imshow(self.maze.maze,self.map)
         self.fig.canvas.draw()
+        print(self.maze.maze)
     def left_move(self, event):
         self.maze.left()
+        plt.imshow(self.maze.maze,self.map)
         self.fig.canvas.draw()
-
+        print(self.maze.maze)
 # TODO: Visualize the maze using matplotlib.
 player_position=(1,1)
 if __name__ == "__main__":
@@ -30,7 +37,7 @@ if __name__ == "__main__":
     labyrinth.maze[1][1]=2
     labyrinth.maze[9][9]=4
     fig,ax=plt.subplots()
-    helper=Mover(labyrinth,fig)
+    helper=Mover(labyrinth,fig,color_map)
     mpl.pyplot.imshow(labyrinth.maze,color_map)
     plt.subplots_adjust(bottom=0.3)
     ax_left=fig.add_axes([0.35, 0.05, 0.1, 0.075])

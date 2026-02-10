@@ -61,7 +61,7 @@ class Maze:
             print("You can't go that way") 
     def left(self):
         x,y=self.player_position
-        if y>2 and self.maze[x][y-1] !=0:
+        if y>=2 and self.maze[x][y-1] !=0:
             self.maze[x][y-1]=2
             self.maze[x][y]=1
             self.player_position=x,y-1
