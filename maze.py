@@ -52,7 +52,7 @@ class Maze:
             print("you can't go that way")
     def down(self):
         x,y=self.player_position
-        if x<self.size*2-2 and self.maze[x+1][y] !=0:
+        if x<self.size*2-1 and self.maze[x+1][y] !=0:
             self.maze[x+1][y]=2
             self.maze[x][y]=1
             self.player_position=x+1,y
@@ -70,7 +70,7 @@ class Maze:
             print("You can't go that way")
     def right(self):
         x,y=self.player_position
-        if y<self.size*2 -2 and self.maze[x][y+1] !=0:
+        if y<self.size*2-1 and self.maze[x][y+1] !=0:
             self.maze[x][y+1]=2
             self.maze[x][y]=1
             self.player_position=x,y+1
