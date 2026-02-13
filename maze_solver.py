@@ -7,6 +7,7 @@ class Maze_solver:
         self.Maze=Maze
         self.solution=np.zeros(shape=(self.Maze.size*2+1,self.Maze.size*2+1),dtype=int)
     def solve_maze(self):
+        print(self.Maze.maze)
         visited=np.zeros(shape=(self.Maze.size*2+1,self.Maze.size*2+1),dtype=int)
         checkpointlist=[(1,1)] #holds the locations of branching paths to return back to
         maze_state_list=[visited] #intending this to hold the state of the maze at each checkpoint, doesnt work
@@ -14,7 +15,9 @@ class Maze_solver:
         current_trial=()
         position=(1,1) #starting position
         done=False
+        counter=0
         while not done:
+            counter+=1
             x,y=position
             visited[x][y]=1
             path_counter=0
@@ -32,21 +35,26 @@ class Maze_solver:
                 visited[x][y]=0
                 dead_ends.append(current_trial)
                 position = checkpointlist.pop(-1)
+                print(visited)
                 visited=maze_state_list.pop(-1)
+                print("Checking previous states")
+                for path in reversed(maze_state_list):
+                    print(path)
+                    print("\n\n\n\n")
+                print(visited)
+
                 continue
             if path_counter==1:
                 #go to the next open spot
                 for neighbor in neighbor_coords:
                     neighborx,neighbory=neighbor
-                    if visited[neighborx][neighbory]==0 and self.Maze.maze[neighborx][neighbory]==1:
+                    if visited[neighborx][neighbory]==0 and self.Maze.maze[neighborx][neighbory]==1 and neighbor not in dead_ends:
                         position=neighbor
                         continue
             if path_counter==2:
                 #at a crossroads, we want to save our spot so we can look again later
                 checkpointlist.append((x,y))
-                newmaze=np.zeros(shape=(self.Maze.size*2+1,self.Maze.size*2+1),dtype=int)
-                newmaze=newmaze+visited
-                maze_state_list.append(newmaze)
+                maze_state_list.append(np.zeros(shape=(self.Maze.size*2+1,self.Maze.size*2+1),dtype=int)+visited)
                 for neighbor in neighbor_coords:
                     neighborx,neighbory=neighbor
                     if visited[neighborx][neighbory]==0 and self.Maze.maze[neighborx][neighbory]==1 and neighbor not in dead_ends:
