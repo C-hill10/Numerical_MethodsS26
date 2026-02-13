@@ -39,6 +39,7 @@ class Maze:
                     self.maze[x+neighbor_x+1, y+neighbor_y+1] = _FLOOR
                     generate_maze_from_cell(neighbor)
         generate_maze_from_cell(self.goal_position)
+        self.goal_position=(self.size*2-1,)*2
         # self.maze[0:2, 0:2] = _FLOOR # Indicate start area. May remove this if desired.
         # self.maze[-2:, -2:] = _FLOOR # Indicate goal area. May remove this if desired.
     def up(self):
@@ -50,6 +51,12 @@ class Maze:
             print(f"moving to {self.player_position}")
         else:
             print("you can't go that way")
+    def win_check(self):
+        if self.player_position==self.goal_position:
+            print("you win!!")
+            return True
+        else:
+            return False
     def down(self):
         x,y=self.player_position
         if x<self.size*2-1 and self.maze[x+1][y] !=0:
