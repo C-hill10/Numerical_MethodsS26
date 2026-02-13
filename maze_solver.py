@@ -9,6 +9,7 @@ class Maze_solver:
     def solve_maze(self):
         visited=np.zeros(shape=(self.Maze.size*2+1,self.Maze.size*2+1),dtype=int)
         checkpointlist=[(1,1)]
+        maze_state_list=[visited]
         position=(1,1)
         done=False
         while not done:
@@ -22,12 +23,13 @@ class Maze_solver:
                     path_counter+=1
                 if neighbor==self.Maze.goal_position:
                     self.solution=visited
-                    print(self.solution)
                     done=True
                     continue
             if path_counter==0:
                 #This is a dead end, would want to backtrack to the last crossroads
+                visited[x][y]=0
                 position = checkpointlist.pop(-1)
+                visited=maze_state_list.pop(-1)
                 continue
             if path_counter==1:
                 #go to the next open spot
@@ -39,12 +41,12 @@ class Maze_solver:
             if path_counter==2:
                 #at a crossroads, we want to save our spot so we can look again later
                 checkpointlist.append((x,y))
+                newmaze=visited
+                maze_state_list.append(newmaze)
                 for neighbor in neighbor_coords:
                     neighborx,neighbory=neighbor
                     if visited[neighborx][neighbory]==0 and self.Maze.maze[neighborx][neighbory]==1:
                         position=neighbor
-        print("This is in solver")
-        print(self.solution)
 if __name__ == "__main__":
     place=Maze(5)
     solver=Maze_solver(place)

@@ -13,8 +13,6 @@ class Imaze:
         solver=Maze_solver(labyrinth)
         solver.solve_maze()
         labyrinth.maze=labyrinth.maze+solver.solution
-        print("this should be the maze with solution on it (2s)")
-        print(labyrinth.maze)
         labyrinth.maze[1][1]=3
         labyrinth.maze[9][9]=4
         fig,ax=plt.subplots()
