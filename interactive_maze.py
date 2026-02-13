@@ -30,9 +30,9 @@ player_position=(1,1)
 if __name__ == "__main__":
     labyrinth= Maze(10)
     color_map=mpl.colors.ListedColormap(['Gray','Black','Blue','Red'])
-    end_position=(9,9)
+    end_position=(19,19)
     labyrinth.maze[1][1]=2
-    labyrinth.maze[9][9]=4
+    labyrinth.maze[19][19]=4
     fig,ax=plt.subplots()
     img = mpl.pyplot.imshow(labyrinth.maze,color_map)
     helper=Mover(labyrinth,fig,color_map,img)
