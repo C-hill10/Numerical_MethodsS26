@@ -5,7 +5,7 @@ import time
 class Maze_solver:
     def __init__(self,Maze):
         self.Maze=Maze
-        self.solution=0
+        self.solution=np.zeros(shape=(self.Maze.size*2+1,self.Maze.size*2+1),dtype=int)
     def solve_maze(self):
         visited=np.zeros(shape=(self.Maze.size*2+1,self.Maze.size*2+1),dtype=int)
         checkpointlist=[(1,1)]
@@ -14,7 +14,6 @@ class Maze_solver:
         while not done:
             x,y=position
             visited[x][y]=1
-            print(visited)
             path_counter=0
             neighbor_coords = (x+1, y), (x, y+1), (x-1, y), (x, y-1)
             for neighbor in neighbor_coords:
@@ -23,6 +22,7 @@ class Maze_solver:
                     path_counter+=1
                 if neighbor==self.Maze.goal_position:
                     self.solution=visited
+                    print(self.solution)
                     done=True
                     continue
             if path_counter==0:

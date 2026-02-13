@@ -11,7 +11,7 @@ class Imaze:
         labyrinth= Maze(5)
         color_map=mpl.colors.ListedColormap(['Black','Gray','Yellow','Blue','Red'])
         solver=Maze_solver(labyrinth)
-        solver.solve_maze
+        solver.solve_maze()
         labyrinth.maze=labyrinth.maze+solver.solution
         print("this should be the maze with solution on it (2s)")
         print(labyrinth.maze)

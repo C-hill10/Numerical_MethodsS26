@@ -76,7 +76,6 @@ class Maze:
             self.maze[x][y+1]=3
             self.maze[x][y]=1
             self.player_position=x,y+1
-            print(f"moving to {self.player_position}")
         else:
             print("You can't go that way")     
     def display(self):
