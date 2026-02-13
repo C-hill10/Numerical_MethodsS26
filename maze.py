@@ -40,15 +40,12 @@ class Maze:
                     generate_maze_from_cell(neighbor)
         generate_maze_from_cell(self.goal_position)
         self.goal_position=(self.size*2-1,)*2
-        # self.maze[0:2, 0:2] = _FLOOR # Indicate start area. May remove this if desired.
-        # self.maze[-2:, -2:] = _FLOOR # Indicate goal area. May remove this if desired.
     def up(self):
         x,y=self.player_position
         if x>=1 and self.maze[x-1][y] !=0:
-            self.maze[x-1][y]=2
+            self.maze[x-1][y]=3
             self.maze[x][y]=1
             self.player_position=x-1,y
-            print(f"moving to {self.player_position}")
         else:
             print("you can't go that way")
     def win_check(self):
@@ -60,25 +57,23 @@ class Maze:
     def down(self):
         x,y=self.player_position
         if x<self.size*2-1 and self.maze[x+1][y] !=0:
-            self.maze[x+1][y]=2
+            self.maze[x+1][y]=3
             self.maze[x][y]=1
             self.player_position=x+1,y
-            print(f"moving to {self.player_position}")
         else:
             print("You can't go that way") 
     def left(self):
         x,y=self.player_position
         if y>=2 and self.maze[x][y-1] !=0:
-            self.maze[x][y-1]=2
+            self.maze[x][y-1]=3
             self.maze[x][y]=1
             self.player_position=x,y-1
-            print(f"moving to {self.player_position}")
         else:
             print("You can't go that way")
     def right(self):
         x,y=self.player_position
         if y<self.size*2-1 and self.maze[x][y+1] !=0:
-            self.maze[x][y+1]=2
+            self.maze[x][y+1]=3
             self.maze[x][y]=1
             self.player_position=x,y+1
             print(f"moving to {self.player_position}")

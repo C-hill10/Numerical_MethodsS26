@@ -2,17 +2,22 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
 from maze import Maze
+from Maze_solver import Maze_solver
 # TODO: Write code to make the maze interactive.
 class Imaze:
     def __init__(self,size=5):
         self.size=size
     def start(self):
         labyrinth= Maze(5)
-        color_map=mpl.colors.ListedColormap(['Black','Gray','Blue','Red'])
-        labyrinth.maze[1][1]=2
-        labyrinth.maze[9][9]=3
+        color_map=mpl.colors.ListedColormap(['Black','Gray','Yellow','Blue','Red'])
+        solver=Maze_solver(labyrinth)
+        solver.solve_maze
+        labyrinth.maze=labyrinth.maze+solver.solution
+        print("this should be the maze with solution on it (2s)")
+        print(labyrinth.maze)
+        labyrinth.maze[1][1]=3
+        labyrinth.maze[9][9]=4
         fig,ax=plt.subplots()
-        print(f"win end is at {labyrinth.goal_position}")
         img = mpl.pyplot.imshow(labyrinth.maze,color_map)
         helper=Mover(labyrinth,fig,color_map,img)
         plt.subplots_adjust(bottom=0.3)
