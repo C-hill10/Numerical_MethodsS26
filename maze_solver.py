@@ -8,9 +8,11 @@ class Maze_solver:
         self.solution=np.zeros(shape=(self.Maze.size*2+1,self.Maze.size*2+1),dtype=int)
     def solve_maze(self):
         visited=np.zeros(shape=(self.Maze.size*2+1,self.Maze.size*2+1),dtype=int)
-        checkpointlist=[(1,1)]
-        maze_state_list=[visited]
-        position=(1,1)
+        checkpointlist=[(1,1)] #holds the locations of branching paths to return back to
+        maze_state_list=[visited] #intending this to hold the state of the maze at each checkpoint, doesnt work
+        dead_ends=[]
+        current_trial=()
+        position=(1,1) #starting position
         done=False
         while not done:
             x,y=position
@@ -28,6 +30,7 @@ class Maze_solver:
             if path_counter==0:
                 #This is a dead end, would want to backtrack to the last crossroads
                 visited[x][y]=0
+                dead_ends.append(current_trial)
                 position = checkpointlist.pop(-1)
                 visited=maze_state_list.pop(-1)
                 continue
@@ -41,12 +44,14 @@ class Maze_solver:
             if path_counter==2:
                 #at a crossroads, we want to save our spot so we can look again later
                 checkpointlist.append((x,y))
-                newmaze=visited
+                newmaze=np.zeros(shape=(self.Maze.size*2+1,self.Maze.size*2+1),dtype=int)
+                newmaze=newmaze+visited
                 maze_state_list.append(newmaze)
                 for neighbor in neighbor_coords:
                     neighborx,neighbory=neighbor
-                    if visited[neighborx][neighbory]==0 and self.Maze.maze[neighborx][neighbory]==1:
+                    if visited[neighborx][neighbory]==0 and self.Maze.maze[neighborx][neighbory]==1 and neighbor not in dead_ends:
                         position=neighbor
+                        current_trial=neighbor
 if __name__ == "__main__":
     place=Maze(5)
     solver=Maze_solver(place)

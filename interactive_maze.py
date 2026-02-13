@@ -6,15 +6,15 @@ from Maze_solver import Maze_solver
 # TODO: Write code to make the maze interactive.
 class Imaze:
     def __init__(self,size=5):
-        self.size=size
+        self.size=int(input("please enter the size of maze you want: "))
     def start(self):
-        labyrinth= Maze(5)
+        labyrinth= Maze(self.size)
         color_map=mpl.colors.ListedColormap(['Black','Gray','Yellow','Blue','Red'])
         solver=Maze_solver(labyrinth)
         solver.solve_maze()
         labyrinth.maze=labyrinth.maze+solver.solution
         labyrinth.maze[1][1]=3
-        labyrinth.maze[9][9]=4
+        labyrinth.maze[self.size*2-1][self.size*2-1]=4
         fig,ax=plt.subplots()
         img = mpl.pyplot.imshow(labyrinth.maze,color_map)
         helper=Mover(labyrinth,fig,color_map,img)
