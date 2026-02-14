@@ -42,7 +42,7 @@ class Maze_solver:
                         neighborx,neighbory=neighbor
                         if visited[neighborx][neighbory]==0 and self.Maze.maze[neighborx][neighbory]==1 and neighbor not in dead_ends:
                             position=neighbor
-                            if justjumped:
+                            if justjumped:  #ensure the new path gets marked in case its also wrong
                                 current_trial.append(neighbor)
                                 justjumped=False
                             break
