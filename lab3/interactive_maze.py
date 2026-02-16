@@ -6,7 +6,18 @@ from Maze_solver import Maze_solver
 # TODO: Write code to make the maze interactive.
 class Imaze:
     def __init__(self,size=5):
-        self.size=int(input("for best results, use 5-8\nplease enter the size of maze you want: "))
+        invalidInput=True
+        while invalidInput:
+            self.size=input("for best results, use 3-15 (depending on hardware)\nplease enter the size of maze you want: ")
+            self.size.strip()
+            self.size=int(self.size)
+            if isinstance(self.size,int):
+                if self.size > 15 or self.size<1:
+                    print("out of range!")
+                else:
+                    invalidInput=False
+            else:
+                print("non integer, please try again, acceptable range is 3-15")
     def start(self):
         labyrinth= Maze(self.size)
         color_map=mpl.colors.ListedColormap(['Black','Gray','Yellow','Blue','Red'])
