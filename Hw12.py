@@ -34,6 +34,7 @@ if __name__=="__main__":
     countercos=0
     counterrf=0
     x=np.arange(0,1,0.01)
+    print(x)
     plt.plot(x,(np.cos(x)-x))
     plt.grid()
     plt.show()
