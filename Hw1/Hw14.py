@@ -29,7 +29,5 @@ if __name__=="__main__":
             done=True
         else:
             guess2=guess2new
-    # result1=bisection1(-0.1,0.1)
-    # result2=bisection1(0.7,1)
     print(f"checking my solution f1({guess1new})={-0.87*guess1new**2+1.65*guess1new+8.25}")
-    print(f"checking my solution f1({guess2new})={0.7*guess2**3-3.7*guess2**2+6.31*guess2-1.9}")
+    print(f"checking my solution f2({guess2new})={0.7*guess2**3-3.7*guess2**2+6.31*guess2-1.9}")
