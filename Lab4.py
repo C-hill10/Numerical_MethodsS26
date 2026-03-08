@@ -34,34 +34,49 @@ def secant(func,x,x1,tol):
         x2=x1-func(x1)*(x1-x)/(func(x1)-func(x))
         x=x1
         x1=x2
-        yield x2    
+        yield x2
+def golden_section(func,a,b,epsilon):
+    phi = (math.sqrt(5)+1)/2
+    while abs(a-b)>epsilon:
+        x1=b-(b-a)/phi
+        x2=a+(b-a)/phi
+        if func(x1)<func(x2):
+            a=x1
+        else:
+            b=x2
+        yield (a+b)/2    
 
 def error(solution,func,method,*args,**kwargs):
     # kwargs are plot_error and plot_convergence (bools)
-    print(f'args 0: {args[0]},args 1: {args[1]},args 2: {args[2]} ')
-    x=method(func,args[0],args[1],args[2])
+    x=method(func,*args)
     guesses=list(x)
+    error=[]
+    for answer in guesses:
+        error.append(abs(answer-solution))
     if bool(kwargs["plot_error"]):
-        error=[]
-        for answer in guesses:
-            error.append(abs(answer-solution))
         fig=plt.figure()
         ax=fig.add_subplot(1,1,1)
         line,=ax.plot(error,color='blue')
         ax.set_yscale('log')
         plt.grid()
+        plt.title("Plot of absolute error vs iteration")
         plt.show(block=False)
+    nextlist=guesses[1:]
+    guesses=guesses[:-1]
+    print(guesses)
+    print(nextlist)
     if bool(kwargs['plot_convergence']):
-        nextlist=guesses[1:]
-        guesses=guesses[:-1]
         fig=plt.figure()
         ax=fig.add_subplot(1,1,1)
-        line,=ax.plot(guesses,nextlist,color='red')
+        plt.scatter(guesses,nextlist)
+        plt.plot(guesses,nextlist,marker="o")
         ax.set_yscale('log')
+        plt.title("Plot of convergence")
         plt.grid()
         plt.show(block=True)
-    print(list(x))
+    return len(np.polyfit(guesses,nextlist,1)-1)
 
 if __name__=="__main__":
     func=lambda x: np.sin(x)
-    error(0,func,bisect,-2,1,1e-5,plot_error=True,plot_convergence=True)
+    deg = error(0,func,bisect,-2,1,1e-5,plot_error=True,plot_convergence=True)
+    print(f"convergence degree is {deg}")
