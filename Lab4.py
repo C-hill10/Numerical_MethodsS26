@@ -45,6 +45,23 @@ def golden_section(func,a,b,epsilon):
         else:
             b=x2
         yield (a+b)/2    
+def parabolic_interpolation(func,a,b,c,limit):
+    for counter in range(0,limit):
+        #attempt from textbook
+        numerator=(((b-a)**2)*(func(b)*func(c)))-(((b-c)**2) *(func(b)-func(a)))
+        denominator=((b-a)*(func(b)*func(c)))-((b-c)*(func(b)-func(a)))
+        x=b-(1/2)*(numerator/denominator)
+        if b<x and x<c:
+            if negfunc(x)<negfunc(b):
+                a,b=b,x
+            else:
+                c=x
+        else:
+            if negfunc(x)<negfunc(b):
+                c,b=b,x
+            else:
+                a=x
+        yield x
 
 def error(solution,func,method,*args,**kwargs):
     # kwargs are plot_error and plot_convergence (bools)
