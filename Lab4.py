@@ -58,7 +58,7 @@ def secant(func,x,x1,tol):
     counter=0
     while abs(x-x1)>tol:
         if counter>=limit:
-                raise ConvergenceError("exceeded global iteration limit")
+            raise ConvergenceError("exceeded global iteration limit")
         yield x
         x2=x1-func(x1)*(x1-x)/(func(x1)-func(x))
         x=x1
@@ -70,7 +70,7 @@ def golden_section(func,a,b,epsilon):
     phi = (math.sqrt(5)+1)/2
     while abs(a-b)>epsilon:
         if counter>=limit:
-                raise ConvergenceError("exceeded global iteration limit")
+            raise ConvergenceError("exceeded global iteration limit")
         x1=b-(b-a)/phi
         x2=a+(b-a)/phi
         if func(x1)<func(x2):
@@ -111,6 +111,7 @@ def error(solution,func,method,*args,**kwargs):
     for entry in range(0,len(guesses)-1):
         #Entry in book mentioned formula being related to error and exponential
         #E_n+1=K*(E_n)^p, using log to solve for p with plot fitting
+        #For this part, i got help from friends to troubleshoot it and make it work
         errorlogx.append(math.log(error[entry]))
         errorlogy.append(math.log(error[entry+1]))
 
@@ -143,25 +144,25 @@ if __name__=="__main__":
 
     #Regula falsi test with same parameters as bisection
     func=lambda x: np.sin(x)
-    deg = error(0,func,regula_falsi,-2,1,1e-5,plot_error=False,plot_convergence=False)
+    deg = error(0,func,regula_falsi,-2,1,1e-5,plot_error=1,plot_convergence=1)
     print(f"convergence degree of Regula falsi is {deg[0]}")
 
     #newton-raphson testing
     func= lambda x:-0.87*x**2+1.65*x+8.25
     derivative= lambda x: -1.74*x+1.65
-    deg=error(4.17038,func,nr,3,1e-8,derivative,plot_error=0,plot_convergence=0)
+    deg=error(4.17038,func,nr,3,1e-8,derivative,plot_error=1,plot_convergence=0)
     print(f"convergence degree of NR is {deg[0]}")
     #secant method test to see if i have it right for order of convergence
     func= lambda x:-0.87*x**2+1.65*x+8.25
     derivative= lambda x: -1.74*x+1.65
-    deg=error(4.17038,func,secant,3.5,4.5,1e-8,plot_error=0,plot_convergence=0)
+    deg=error(4.17038,func,secant,3.5,4.5,1e-8,plot_error=1,plot_convergence=1)
     print(f"convergence degree of Secant is {deg[0]}")
     #Fixed point test, the fixed point is 0
     func=lambda x: x**2
-    deg= error(0,func,fixed_point,0.5,1e-3,plot_error=0,plot_convergence=False)
+    deg= error(0,func,fixed_point,0.5,1e-3,plot_error=1,plot_convergence=1)
     print(f"convergence degree of fixed point is {deg[0]}")
 
     #optimization test 
     func= lambda x: (-.3*x**4)+(1.8*x**3)-(1.2*x**2)+2*x
-    deg= error(4.1122,func,golden_section,3,5,1e-5,plot_error=0,plot_convergence=False)
+    deg= error(4.1122,func,golden_section,3,5,1e-5,plot_error=1,plot_convergence=1)
     print(f"convergence degree of golden section is {deg[0]}")
