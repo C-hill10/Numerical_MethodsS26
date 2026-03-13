@@ -1,5 +1,16 @@
 import numpy as np
-
+import matplotlib.pyplot as plt
+import matplotlib as mpl
+def forward_substitution(lower_triangle,b_vector):
+    d_vector=np.array(shape=(len(lower_triangle,1)))
+    #first one
+    d_vector[0][0]=b_vector[0][0]/lower_triangle[0][0]
+    for entry in range(1,len(d_vector)):
+        intermediate_sum=0
+        for index in range(0,entry):
+            intermediate_sum+=lower_triangle[entry][index]*b_vector[index][0]
+        d_vector[entry]=(b_vector[entry][0]-intermediate_sum)/lower_triangle[entry][entry]
+    return d_vector
 def make_T_matrix(num_rows):
     t_matrix=np.identity(num_rows)
     t_matrix=t_matrix*-4
@@ -9,6 +20,11 @@ def make_T_matrix(num_rows):
             t_matrix[i][i+1]=1
         t_matrix[i][i-1]=1
     return t_matrix
+def draw_solution(solution_matrix):
+    plt.imshow(solution_matrix,cmap="inferno")
+    plt.colorbar()
+    plt.show()
+
 
 def make_A_matrix(num_rows_a,num_rows_t):
     t_matrix=make_T_matrix(num_rows_t)
@@ -44,5 +60,6 @@ def cholesky_decomp(Symmetric_matrix):
 if __name__=="__main__":
     #mymatrix=make_A_matrix(3,3)
     testmatrix=np.array([[6,15,55],[15,55,225],[55,225,979]])
-    cholesky_decomp(testmatrix)
+    upper_triangle=cholesky_decomp(testmatrix)
+    draw_solution(testmatrix)
 
