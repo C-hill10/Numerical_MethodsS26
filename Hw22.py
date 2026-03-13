@@ -1,9 +1,18 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
-import Hw21
+def back_substitute(upper_triangle,solution_vector):
+    n=len(upper_triangle)
+    final_answer=np.zeros(shape=(n,1))
+    final_answer[n-1]=solution_vector[n-1][0]/upper_triangle[n-1][n-1]
+    for index in reversed(range(0,n-1)):
+        intermediate_sum=0
+        for i in reversed(range(0,n)):
+            intermediate_sum+=upper_triangle[index][i]*final_answer[i][0]
+        final_answer[index]=(solution_vector[index]-intermediate_sum)/upper_triangle[index][index]
+    return final_answer
 def forward_substitution(lower_triangle,b_vector):
-    d_vector=np.array(shape=(len(lower_triangle),1))
+    d_vector=np.zeros(shape=(len(lower_triangle),1))
     #first one
     d_vector[0][0]=b_vector[0][0]/lower_triangle[0][0]
     for entry in range(1,len(d_vector)):
@@ -73,16 +82,28 @@ def cholesky_decomp(Symmetric_matrix):
 def make_big(matrix,size_square):
     matrix=np.block([*matrix])
     return np.reshape(matrix,(size_square**2,size_square**2))
+def draw_picture(matrix):
+    plt.imshow(matrix, cmap='inferno')
+    plt.colorbar()
+    plt.show()
 if __name__=="__main__":
     mymatrix=make_A_matrix(10,10)
     mymatrix=make_big(mymatrix,10)
+    print(mymatrix)
+    testmatrix=-1*cholesky_decomp(-1*mymatrix)
     #testmatrix=np.array([[6,15,55],[15,55,225],[55,225,979]])
-    #cholesky_decomp(testmatrix)
-    b_vector=make_b_vector(10)
-    np.linalg.solve(mymatrix,b_vector)
-    # mymatrix=cholesky_decomp(mymatrix)
+    b_vector10=make_b_vector(10)
+    answer=np.linalg.solve(mymatrix,b_vector10)
+    answer=answer.reshape((10,10))
+    draw_picture(answer)
+    A25=make_A_matrix(25,25)
+    A25=make_big(A25,25)
+    B25=make_b_vector(25)
+    answer25=np.linalg.solve(A25,B25)
+    draw_picture(answer25)
     # d_vector=forward_substitution(np.transpose(mymatrix),b_vector)
-    # b_vector=Hw21.back_substitute(mymatrix,d_vector)
-    
+    # b_vector=back_substitute(mymatrix,d_vector)
+    # b_vector=b_vector.reshape((10,10))
+    # draw_picture(b_vector)
 
 
