@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
+import
 def forward_substitution(lower_triangle,b_vector):
     d_vector=np.array(shape=(len(lower_triangle,1)))
     #first one
@@ -82,7 +83,7 @@ if __name__=="__main__":
     #cholesky_decomp(testmatrix)
     b_vector=make_b_vector(10)
     mymatrix=cholesky_decomp(mymatrix)
-    d_vector=forward_substitution(mymatrix,b_vector)
-    print(b_vector)
+    d_vector=forward_substitution(np.transpose(mymatrix),b_vector)
+    
 
 
