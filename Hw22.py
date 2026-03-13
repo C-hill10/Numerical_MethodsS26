@@ -1,9 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
-import
+import Hw21
 def forward_substitution(lower_triangle,b_vector):
-    d_vector=np.array(shape=(len(lower_triangle,1)))
+    d_vector=np.array(shape=(len(lower_triangle),1))
     #first one
     d_vector[0][0]=b_vector[0][0]/lower_triangle[0][0]
     for entry in range(1,len(d_vector)):
@@ -26,8 +26,6 @@ def make_b_vector(num_points):
     b_vector=np.zeros((num_points**2,1))
     total_points=num_points+2 #account for grid spacing counting as points
     point_values=np.linspace(-1,1,total_points)
-    print(point_values)
-    
     f= lambda x,y: 25-x**2+y**2
     for y in range(0,num_points):
         for x in range(0,num_points):
@@ -39,7 +37,6 @@ def make_b_vector(num_points):
                 b_vector[y*num_points+x][0]+=f(-1,point_values[y+1])
             if x==num_points-1:
                 b_vector[y*num_points+x][0]+=f(1,point_values[y+1])
-    print(f"spacing is {point_values[1]}")
     b_vector=b_vector*(-1/(point_values[1]**2))
     return b_vector
 
@@ -78,12 +75,14 @@ def make_big(matrix,size_square):
     return np.reshape(matrix,(size_square**2,size_square**2))
 if __name__=="__main__":
     mymatrix=make_A_matrix(10,10)
-    mymatrix=make_big(mymatrix)
+    mymatrix=make_big(mymatrix,10)
     #testmatrix=np.array([[6,15,55],[15,55,225],[55,225,979]])
     #cholesky_decomp(testmatrix)
     b_vector=make_b_vector(10)
-    mymatrix=cholesky_decomp(mymatrix)
-    d_vector=forward_substitution(np.transpose(mymatrix),b_vector)
+    np.linalg.solve(mymatrix,b_vector)
+    # mymatrix=cholesky_decomp(mymatrix)
+    # d_vector=forward_substitution(np.transpose(mymatrix),b_vector)
+    # b_vector=Hw21.back_substitute(mymatrix,d_vector)
     
 
 
