@@ -20,3 +20,17 @@ def FFT(sequence,num_samples=len(sequence),stride=1):
 
     def _recursiveFFT(Sequence):
         return 0
+    
+    #trying to just exactly match the wikipedia article
+def FFT(sequence,num_samples,stride):
+    if num_samples==1:
+        answer[0]= sequence[0] # not sure how to get the right index in here
+    else:
+        #need to do some array slicing to make this work
+        FFT(sequence[],num_samples/2,2*stride)
+        FFT(sequence[],num_samples/2,2*stride)
+        for k in range(0,(num_samples/2)): #the -1 is taken care of by the range function
+            p=answer[k]
+            q=math.exp(-2*math.pi*1j*k/num_samples)*answer[k+num_samples/2]
+            answer[k]=p+q
+            answer[k+num_samples/2]=p-q
