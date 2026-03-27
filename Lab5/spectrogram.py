@@ -1,7 +1,7 @@
 from windowing import hann
 import numpy as np
 import matplotlib.pyplot as plt
-
+import CooleyTukey
 if __name__ == "__main__":
     # Generate a sample noise signal
     t = np.arange(0.0, 20.5, 0.0005)
@@ -17,8 +17,7 @@ if __name__ == "__main__":
     N = 1024 # samples per chunk of windowed audio
     for chunk in hann(x, N):
         # Compute the fast Fourier transform (FFT) of this chunk
-        X = np.fft.fft(chunk)[0:N//2] # TODO: Use your own FFT instead
-
+        X = CooleyTukey.FFT2(chunk)[0:N//2] # TODO: Completed
         # Compute the power spectral density (PSD) of this chunk
         # PSD is 10*log10 of the square of the real part of the FFT
         psd = 10*np.log10(np.abs(X)**2)
