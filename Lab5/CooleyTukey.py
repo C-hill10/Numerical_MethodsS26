@@ -26,12 +26,14 @@ def CubicSpline(xmatrix,ymatrix):
     d_matrix=np.zeros(shape=(len(xmatrix)+1,1))
     coefficient_matrix=2*np.identity(len(xmatrix))
     d_matrix[0]=6*DividedDifference3(xmatrix[0],ymatrix[0],xmatrix[0],ymatrix[0],xmatrix[1],ymatrix[1])
-    coefficient_matrix[0][1]=1
+    d_matrix[-1]=6*DividedDifference3(xmatrix[-2],ymatrix[-2],xmatrix[-1],ymatrix[-1],xmatrix[-1],ymatrix[-1])
+    print(coefficient_matrix)
+    print(d_matrix)
     for k in range(1,len(xmatrix)):
         if k!=len(xmatrix):
             d_matrix[k]=6*DividedDifference3(xmatrix[k-1],ymatrix[k-1],xmatrix[k],ymatrix[k],xmatrix[k+1],ymatrix[k+1])
-        hi=xmatrix[k+1]-xmatrix[k]
-        hi1=xmatrix[k+2]-xmatrix[k+1]
+        hi=xmatrix[k]-xmatrix[k-1]
+        hi1=xmatrix[k+1]-xmatrix[k]
         mui=hi/(hi+hi1)
         coefficient_matrix[k][k-1]=mui
         if k!=len(xmatrix):
@@ -42,12 +44,7 @@ def CubicSpline(xmatrix,ymatrix):
     return coefficients
 
 if __name__=="__main__":
-    testmatrix=np.array([0,1,2,3,4,5,6,7])
-    print(np.fft.fft(testmatrix).shape)
-    test=FFT2(testmatrix)
-    print(test.shape)
-    xmatrix=np.array([[1],[2]])
-    print(xmatrix)
-    ymatrix=np.array([[2],[3]])
-    #coefficients=CubicSpline(xmatrix,ymatrix)
+    xmatrix=np.array([[1],[2],[3]])
+    ymatrix=np.array([[5],[3],[4]])
+    coefficients=CubicSpline(xmatrix,ymatrix)
     
