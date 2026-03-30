@@ -3,20 +3,21 @@ import numpy as np
 import matplotlib.pyplot as plt
 import CooleyTukey
 import sounddevice as sd
+from scipy.interpolate import CubicSpline
 fs=44100
 seconds=3 # 4 seconds does not work, get the edge case data, 1 second does work
 if __name__ == "__main__":
     # Generate a sample noise signal
-    # t = np.arange(0.0, 20.5, 0.0005)
-    # s1 = np.sin(2*np.pi*100*t)
-    # s2 = 2*np.sin(2*np.pi*400*t)
-    # s2[t <= 10] = s2[12 <= t] = 0
-    # noise = 0.01*np.random.random(size=len(t))
-    # x = s1 + s2 + noise
+    t = np.arange(0.0, 20.5, 0.0005) #changed to 05 instead of 0005
+    s1 = np.sin(2*np.pi*100*t)
+    s2 = 2*np.sin(2*np.pi*400*t)
+    s2[t <= 10] = s2[12 <= t] = 0
+    noise = 0.01*np.random.random(size=len(t))
+    x = s1 + s2 + noise
     # TODO: This does work, just be careful with time you sample
-    print(f"starting recording for {seconds} seconds")
-    x=sd.rec((int(seconds * fs)),samplerate=fs,channels=1)
-    sd.wait()
+    # print(f"starting recording for {seconds} seconds")
+    # x=sd.rec((int(seconds * fs)),samplerate=fs,channels=1)
+    # sd.wait()
     # Iterate over the windowed audio and compute power spectrum data
     psds = []
     N = 1024 # samples per chunk of windowed audio
@@ -32,5 +33,10 @@ if __name__ == "__main__":
     # Plot the PSDs as a spectrogram
     # TODO: Add a subplot showing the interpolated audio waveform (with shared x-axis)
     # TODO: Label and correct the x-axis and y-axis values
-    plt.imshow(psds, aspect='auto', origin='lower')
+    interpolation=CubicSpline(t,x,bc_type="natural")
+    fig,ax=plt.subplots(2,1,sharex=True,gridspec_kw={'height_ratios':[1,2]})
+    ax[0].plot(t,interpolation(t))
+    #ax[0].title.set_text("Interpolated waveform")
+    ax[1]=plt.imshow(psds, aspect='auto', origin='lower')
+    #ax[1].title.set_text("Power spectral density")
     plt.show()
