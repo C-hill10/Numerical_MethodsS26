@@ -19,13 +19,11 @@ if __name__ == "__main__":
     # t2=np.arange(0.0, 20.5, 0.01)
     t1=np.arange(0.0,1,1/fs)
     t2=np.arange(0.0,1,1/(2*fs))
-    print(f'shake of t1 and t2 are {t1.shape}, {t2.shape}')
     # TODO: This does work, just be careful with time you sample
     print(f"starting recording for {seconds} seconds")
     x=sd.rec((int(seconds * fs)),samplerate=fs,channels=1)
     x=x.squeeze()
     sd.wait()
-    print(f"shape of x is {x.shape}")
     # Iterate over the windowed audio and compute power spectrum data
     psds = []
     N = 1024 # samples per chunk of windowed audio
