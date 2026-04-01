@@ -23,10 +23,10 @@ def DD1(x1,x0,y1,y0):
 
 def CubicSpline(xmatrix,ymatrix):
     #This is using the process detailed in the book for the natural boundary condition
-    result=np.zeros(shape=(len(xmatrix),1))
-    h_values=np.zeros(shape=(len(xmatrix)-1,1))
-    b_matrix=np.zeros(shape=(len(xmatrix)-1,1))
-    d_matrix=np.zeros(shape=(len(xmatrix)-1,1))
+    result=np.zeros(shape=(len(xmatrix),))
+    h_values=np.zeros(shape=(len(xmatrix)-1,))
+    b_matrix=np.zeros(shape=(len(xmatrix)-1,))
+    d_matrix=np.zeros(shape=(len(xmatrix)-1,))
     coefficient_matrix=np.identity(len(xmatrix))
     #set up result matrix
     for k in range(1,len(result)-1):
@@ -48,10 +48,15 @@ def CubicSpline(xmatrix,ymatrix):
         b_matrix[i]=((ymatrix[i+1]-ymatrix[i])/h_values[i])-(h_values[i]/3)*(2*coefficients[i]+coefficients[i+1])
     spline_matrix=np.concatenate((ymatrix[0:-1],b_matrix,coefficients[0:-1],d_matrix)).reshape((-1,4),order='F')
     return spline_matrix
-def interpolate(coefficient_matrix,x,x_matrix,spacing):
-    row=x//(matrix_spacing)
-    #calc interpolation function for the given point
-    return coefficient_matrix[row][0]+coefficient_matrix[row][1]*(x-x_matrix[row])+coefficient_matrix[row][2]*((x-x_matrix[row])**2)+coefficient_matrix[row][3]*((x-x_matrix[row])**3)
+def interpolate(coefficient_matrix,x,x_matrix,matrix_spacing):
+    values=np.zeros(shape=(len(x),))
+    for x0 in range(0,len(x)):
+        row=int(x[x0]//(matrix_spacing))
+        if row>=len(coefficient_matrix):
+            row=len(coefficient_matrix)-1
+        #calc interpolation function for the given point
+        values[x0]= coefficient_matrix[row][0]+coefficient_matrix[row][1]*(x[x0]-x_matrix[row])+coefficient_matrix[row][2]*((x[x0]-x_matrix[row])**2)+coefficient_matrix[row][3]*((x[x0]-x_matrix[row])**3)
+    return values
 if __name__=="__main__":
     xmatrix=np.array([[3],[4.5],[7.0],[9.0]])
     ymatrix=np.array([[2.5],[1],[2.5],[0.5]])
