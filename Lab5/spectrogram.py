@@ -22,6 +22,7 @@ if __name__ == "__main__":
     # TODO: This does work, just be careful with time you sample
     print(f"starting recording for {seconds} seconds")
     x=sd.rec((int(seconds * fs)),samplerate=fs,channels=1)
+    print("recording done")
     x=x.squeeze()
     sd.wait()
     # Iterate over the windowed audio and compute power spectrum data
@@ -41,14 +42,16 @@ if __name__ == "__main__":
     # TODO: Label and correct the x-axis and y-axis values
     #interpolation=scipy.interpolate.CubicSpline(t,x,bc_type="natural")
     my_spline=CooleyTukey.CubicSpline(t1,x) #this worked for small data values, but i got a memory error for trying to hold the whole spline
-    fig,(ax0,ax1)=plt.subplots(2,1,sharex=True,gridspec_kw={'height_ratios':[1,2]})
+    fig,(ax0,ax1)=plt.subplots(nrows=2,sharex=True,gridspec_kw={'height_ratios':[1,2]})
+    frequency=np.linspace(0,fs/2,N//2)
+    times=np.linspace(0,seconds,psds.shape[1])
     #ax0.plot(t,x)
     ax0.plot(t2,CooleyTukey.interpolate(my_spline,t2,t1,1/fs))
     #ax[0].title.set_text("Interpolated waveform")
     ax0.set_ylabel("magnitude")
     ax1.set_xlabel("Time (s)")
     ax1.set_ylabel("power spectral density W/Hz")
-    ax1=plt.imshow(psds, aspect='auto', origin='lower')
-    
-    #ax[1].title.set_text("Power spectral density")
+    ax1=plt.imshow(psds, aspect='auto', origin='lower',extent=[times[0],times[-1],frequency[0],frequency[-1]])
+    # ax0.set_title("Interpolated waveform")
+    # ax1.set_title("Power spectral density")
     plt.show()
