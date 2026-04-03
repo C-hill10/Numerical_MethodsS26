@@ -41,7 +41,6 @@ def bisection(a,b,polynomial):
         result=polynomial(xm)
         if abs(b-a)<1e-8:
             return xm
-            done=True 
         else:
             if (polynomial(a))*(result) >0:
                 a=xm
@@ -49,19 +48,22 @@ def bisection(a,b,polynomial):
                 b=xm
 if __name__=="__main__":
     # test1=np.array([[300,.616],[400,.525],[500,.457]])
-    # test2=np.arange(300,500,50)
+    # test2=np.arange(300,500,25)
     # test3=Vandermonde(test1)
     # print(test3)
     # fig=plt.plot(test2,test3(test2))
     # plt.show()
     # RI_table=np.array([[6563,1.50883],[6439, 1.50917],[5890, 1.51124],[5338, 1.51386],[5086, 1.51534],[4861, 1.51690],[4340, 1.52136],[3988, 1.52546]])
     # RI_interpolation=Lagrange(RI_table)
-    test_x=np.arange(0,2,0.01)
-    i=5
-    while i <=100:
-        test=make_points(i)
-        n5=Vandermonde(test)
-        fig=plt.plot(test[0:,0],n5(test))
-        plt.show()
-        i+=5
+    # test_x=np.arange(0,2,0.01)
+    i=20
+    test=make_points(i)
+    n5=Vandermonde(test)
+    l5=Lagrange(test)
+    fig, axs = plt.subplots(1, 1)
+    axs=plt.plot(test[:,0],n5(test[:,0]),label="Vandermonde",linestyle=":")
+    axs=plt.plot(test[:,0],l5(test[:,0]),label="Lagrange",linestyle="--")
+    fig.legend(["Vandermonde",'Lagrange'])
+    fig.suptitle(f"n={i}")
+    plt.show()
         
