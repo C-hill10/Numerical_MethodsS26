@@ -18,7 +18,7 @@ def preprocess(filename: str):
 
 if __name__ == "__main__":
     # Run self-test code if called directly
-    G = preprocess('images/hallett_peak.jpg')
+    G = preprocess('images/bullet.jpg')
     print(G.shape)
     plt.imshow(G, cmap='gray')
     plt.axis('off')
