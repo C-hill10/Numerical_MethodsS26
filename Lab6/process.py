@@ -5,7 +5,7 @@ import math
 import preprocessing
 def gradient_vector(array):
     # 3d array, 2 entries for each pixel, x and y component of the vector there
-    new_array=np.array(shape=(array.shape[0],array.shape[1],2))
+    new_array=np.zeros(shape=(array.shape[0],array.shape[1],2))
     for row in range(0,array.shape[0]):
         for index in range(0,array.shape[1]):
             try:
@@ -29,13 +29,31 @@ def gradient_vector(array):
     return new_array
 
 
-def check_threshold(threshold,array):
+def check_threshold(array,threshold=0.5):
     #i will be using the euclidian norm for this
-    outlines=np.array(shape=(array.shape[0],array.shape[1]),dtype="boolean")
+    outlines=np.zeros(shape=(array.shape[0],array.shape[1]),dtype=int)
     for row in range(0,array.shape[0]):
         for index in range(0,array.shape[1]):
             if math.sqrt(array[row][index][0]**2+array[row][index][1]**2) >= threshold:
-                outlines[row][index]=True
+                outlines[row][index]=1
             else:
-                outlines[row][index]=False
+                outlines[row][index]=0
+
+if __name__=="__main__":
+	filename=input("please give the file name you would like to process:")
+	done=False
+	while not done:
+		try:
+			filename="images/"+filename+".jpg"
+			print(filename)
+			processed_image=preprocessing.read_image(filename)
+			done=True
+		except FileNotFoundError:
+			print("please try again, file not found")
+			filename=input("please give the file name you would like to process:")
+	grey_image=preprocessing.preprocess(filename)
+	lines=check_threshold(gradient_vector(grey_image))
+	plt.imshow(lines)
+	plt.axis('off')
+	plt.show() 
 
