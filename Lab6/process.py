@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 import math
 import preprocessing
+from matplotlib.widgets import Slider
 def gradient_vector(array):
     # 3d array, 2 entries for each pixel, x and y component of the vector there
     new_array=np.zeros(shape=(array.shape[0],array.shape[1],2))
@@ -63,7 +64,21 @@ if __name__=="__main__":
 	gradient_vector=gradient_vector(grey_image)
 	lines=check_threshold(gradient_vector)
 	modified_picture=mask(processed_image,lines)
-	plt.imshow(modified_picture)
-	plt.axis('off')
+	fig,ax=plt.subplots()
+	image=ax.imshow(modified_picture)
+	axthreshold = fig.add_axes([0.25, 0.05, 0.65, 0.03])
+	thresh_slider = Slider(
+		ax=axthreshold,
+		label='threshold',
+		valmin=1,
+		valmax=50,
+		valinit=25,
+	)
+	def update(val):
+		new_picture=mask(processed_image,check_threshold(gradient_vector,val))
+		image.set_data(new_picture)
+		fig.canvas.draw()
+	thresh_slider.on_changed(update)
+	ax.axis('off')
 	plt.show() 
 
