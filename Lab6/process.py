@@ -28,7 +28,48 @@ def gradient_vector(array):
             new_array[row][index][0]=(right-left)/2
             new_array[row][index][1]=(above-below)/2
     return new_array
-
+def improved_gradient(array):
+	# 3d array, 2 entries for each pixel, x and y component of the vector there
+	new_array=np.zeros(shape=(array.shape[0],array.shape[1],2))
+	for row in range(0,array.shape[0]):
+		for index in range(0,array.shape[1]):
+			try:
+				above=array[row-1][index]
+			except IndexError:
+				above=0
+			try:
+				two_up=array[row-2][index]
+			except IndexError:
+				two_up=0
+			try:
+				two_left=array[row][index-2]
+			except IndexError:
+				two_left=0
+			try:
+				two_right=array[row+2][index]
+			except IndexError:
+				two_right=0
+			try:
+				two_down=array[row+2][index]
+			except IndexError:
+				two_down=0
+			try:
+				below=array[row+1][index]
+			except IndexError:
+				below=0
+			try:
+				left=array[row][index-1]
+			except IndexError:
+				left=0
+			try:
+				right=array[row][index+1]
+			except IndexError:
+				right=0
+			# for this one i'm using the centered difference formula in the textbook
+			# the one with O(h^4) Error
+			new_array[row][index][0]=(8*(right-left)+(two_right-two_left))/12
+			new_array[row][index][1]=(8*(above-below)+(two_up-two_down))/12
+	return new_array
 
 def check_threshold(array,threshold=25):
     #i will be using the euclidian norm for this
@@ -61,7 +102,7 @@ if __name__=="__main__":
 			print("please try again, file not found")
 			filename=input("please give the file name you would like to process:")
 	grey_image=preprocessing.preprocess(filename)
-	gradient_vector=gradient_vector(grey_image)
+	gradient_vector=improved_gradient(grey_image)
 	lines=check_threshold(gradient_vector)
 	modified_picture=mask(processed_image,lines)
 	fig,ax=plt.subplots()
