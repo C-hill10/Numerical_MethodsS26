@@ -97,14 +97,19 @@ if __name__=="__main__":
 			filename="images/"+filename+".jpg"
 			print(filename)
 			processed_image=preprocessing.read_image(filename)
+			print("image accepted")
 			done=True
 		except FileNotFoundError:
 			print("please try again, file not found")
 			filename=input("please give the file name you would like to process:")
 	grey_image=preprocessing.preprocess(filename)
+	print("greyscale image made")
 	gradient_vector=improved_gradient(grey_image)
+	print("gradient vector calculated")
 	lines=check_threshold(gradient_vector)
+	print("initial threshold found")
 	modified_picture=mask(processed_image,lines)
+	print("picture mask done")
 	fig,ax=plt.subplots()
 	image=ax.imshow(modified_picture)
 	axthreshold = fig.add_axes([0.25, 0.05, 0.65, 0.03])
