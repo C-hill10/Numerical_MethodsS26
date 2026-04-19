@@ -3,6 +3,7 @@ import math
 import wave
 import matplotlib.pyplot as plt
 import sounddevice as sd
+import argparse
 #using this site for reading wav file into np array https://www.w3reference.com/blog/python-write-a-wav-file-into-numpy-float-array/
 if __name__=="__main__":
     parser=argparse.ArgumentParser(description="reads wav file and outputs a low frequency fourier transform plot to try and guess BPM")
@@ -31,4 +32,7 @@ if __name__=="__main__":
                 raise ValueError(f"Unsupported sample width: {sampwidth} bytes")  
             
             audio_int = np.frombuffer(raw_data, dtype=dtype)  # Integer array   
-            udio_int = audio_int.reshape(-1, nchannels)  # Shape: (nframes, nchannels)  
+            udio_int = audio_int.reshape(-1, nchannels)  # Shape: (nframes, nchannels) 
+            print(udio_int)
+            sd.play(udio_int,44100) 
+            sd.wait()
