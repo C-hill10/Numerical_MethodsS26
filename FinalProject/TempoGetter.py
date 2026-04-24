@@ -24,15 +24,22 @@ if __name__=="__main__":
             raw_data=music_file.readframes(nframes)
             if sampwidth==1:
                 dtype=np.uint8
+                print(f"Dtype is 8 bits")
             elif sampwidth == 2:  
-                dtype = np.int16  
+                dtype = np.int16 
+                print(f"Dtype is 16 bits") 
             elif sampwidth == 4:  
-                dtype = np.int32  # Assumes 32-bit integer (common for PCM)  
+                dtype = np.int32  # Assumes 32-bit integer (common for PCM) 
+                print(f"Dtype is 32 bits") 
             else:  
                 raise ValueError(f"Unsupported sample width: {sampwidth} bytes")  
             
             audio_int = np.frombuffer(raw_data, dtype=dtype)  # Integer array   
             udio_int = audio_int.reshape(-1, nchannels)  # Shape: (nframes, nchannels) 
             print(udio_int)
-            sd.play(udio_int,44100) 
-            sd.wait()
+            seconds=np.arange(0,udio_int.shape[0]/44100,1/44100)
+            fig,ax=plt.subplots()
+            plt.plot(seconds,udio_int[::,0],seconds,udio_int[::,1])
+            plt.xlabel("seconds")
+            plt.ylabel("16 bit PCM Value from Wav file")
+            plt.show()
