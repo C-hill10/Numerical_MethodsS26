@@ -45,4 +45,6 @@ if __name__=="__main__":
             plt.xlabel("seconds")
             plt.ylabel("16 bit PCM Value from Wav file")
             plt.show()
-            
+            rectangular_window2048=np.ones((1,2048))
+            my_stft=scipy.signal.ShortTimeFFT(rectangular_window2048,100,1/44100)
+            right_channel=my_stft.stft(udio_int[::,0])
