@@ -60,19 +60,23 @@ def adaptive_quadrature(a,b,func,tolerance):
 		+adaptive_quadrature(c,b,func,tolerance/2))
 def Five_point_derivative(func,h):
 	return lambda x:(1/(12*h))*(func(x-2*h)-8*func(x-h)+8*func(x+h)-func(x+2*h))
+def second_derivative(func,h):
+	First_derivative=Five_point_derivative(func,h)
+	return Five_point_derivative(First_derivative,h)
+def golden_section(func,a,b,epsilon):
+    phi = (math.sqrt(5)+1)/2
+    while abs(a-b)>epsilon:
+        x1=b-(b-a)/phi
+        x2=a+(b-a)/phi
+        if func(x1)<func(x2):
+            a=x1
+        else:
+            b=x2
+    return (a+b)/2   
 if __name__=="__main__":
-	x_values=np.arange(-10,10,0.1)
-	func=lambda x: (8*x**8 - 12*x**7 - 62*x**6 + 89*x**5 +156*x**4
-	-215*x**3 -126*x**2 +186*x)
-	derivative=lambda x:(64*x**7 - 84*x**6 - 492*x**5 + 445*x**4 +624*x**3
-	-645*x**2 -252*x +186)
-	h_half=Five_point_derivative(func,1/2)
-	h_sixteenth=Five_point_derivative(func,1/16)
-	fig=plt.figure()
-	ax=fig.add_subplot(1,1,1)
-	ax.plot(x_values,derivative(x_values),label="analyic derivative",linestyle=":")
-	ax.plot(x_values,h_half(x_values),label="h=1/2",linestyle="--")
-	ax.plot(x_values,h_sixteenth(x_values),label="h=1/16",linestyle="-.")
-	ax.legend()
-	plt.show()
+	x_values=np.arange(0,450,5)
+	func=lambda x: -156-(1/8)*np.exp(x-447)+78*(np.exp(-x/500)+np.exp(x/500))
+	acceleration=second_derivative(func,1/16)
+	solution=golden_section(acceleration,0,450,10e-6)
+	print(f"The max acceleration is at {solution}, the value is {acceleration(solution)}")
 	
