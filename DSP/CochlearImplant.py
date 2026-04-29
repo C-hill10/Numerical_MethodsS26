@@ -1,4 +1,5 @@
 import numpy as np
+import math
 import wave
 import sounddevice as sd
 import matplotlib.pyplot as plt
@@ -18,6 +19,8 @@ def findBW(num_channels):
 
 if __name__=="__main__":
     fs=44100
+    num_channels=8
+    frequencystep=np.linspace(0,fs/2,1024)
     speechbw,otherbw,bwArray=findBW(8)
     try:
         music_file=wave.open("../FinalProject/GGST-Jam_verse.wav","rb")
@@ -47,13 +50,30 @@ if __name__=="__main__":
             audio_int = np.frombuffer(raw_data, dtype=dtype)  # Integer array   
             udio_int = audio_int.reshape(-1, nchannels)  # Shape: (nframes, nchannels) 
             seconds=np.arange(0,udio_int.shape[0]/fs,1/fs)
-            # fig,ax=plt.subplots()
+            fig,ax=plt.subplots()
             # plt.plot(seconds,udio_int[::,0],seconds,udio_int[::,1])
             # plt.xlabel("seconds")
             # plt.ylabel("16 bit PCM Value from Wav file")
             # plt.show()
             rectangular_window=np.ones((2048,))
-            my_stft=scipy.signal.ShortTimeFFT(rectangular_window,100,fs)
+            my_stft=scipy.signal.ShortTimeFFT(rectangular_window,100,fs,fft_mode="twosided")
             right_channel=my_stft.stft(udio_int[::,0])
             print(right_channel.shape)
             left_channel=my_stft.stft(udio_int[::,1])
+            channel_values=np.zeros(shape=(num_channels,right_channel.shape[1]))
+            plt.plot(np.abs(right_channel[0:right_channel.shape[0]//2,0]))
+            for i in range(0,right_channel.shape[1]):
+                channel_index=0
+                bwUsed=0
+                channelmag=0
+                for j in range(0,right_channel.shape[0]):
+                    bwUsed+=frequencystep[0]
+                    channelmag+=np.abs(right_channel[j][i])
+                    if bwUsed>=bwArray[channel_index] and channel_index<num_channels-1:
+                        channel_values[channel_index][i]=channelmag
+                        channel_index+=1
+                        bwUsed=0
+                        channelmag=0
+
+
+            plt.show()
