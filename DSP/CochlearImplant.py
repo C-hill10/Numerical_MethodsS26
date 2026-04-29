@@ -61,14 +61,14 @@ if __name__=="__main__":
             print(right_channel.shape)
             left_channel=my_stft.stft(udio_int[::,1])
             channel_values=np.zeros(shape=(num_channels,right_channel.shape[1]))
-            plt.plot(np.abs(right_channel[0:right_channel.shape[0]//2,0]))
+            plt.plot(np.abs(right_channel[::,0]))
             for i in range(0,right_channel.shape[1]):
                 channel_index=0
                 bwUsed=0
                 channelmag=0
                 for j in range(0,right_channel.shape[0]):
                     bwUsed+=frequencystep[0]
-                    channelmag+=np.abs(right_channel[j][i])
+                    channelmag+=right_channel[j][i]
                     if bwUsed>=bwArray[channel_index] and channel_index<num_channels-1:
                         channel_values[channel_index][i]=channelmag
                         channel_index+=1
