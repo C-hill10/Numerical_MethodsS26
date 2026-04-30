@@ -9,6 +9,7 @@ def findBW(num_channels):
     other_channels=num_channels-speech_channels
     speechbw=900/speech_channels
     otherbw=3000/other_channels
+    print()
     bwArray=np.zeros(shape=(num_channels,))
     for i in range(0,num_channels):
         if i<speech_channels:
@@ -19,11 +20,13 @@ def findBW(num_channels):
 
 if __name__=="__main__":
     fs=44100
-    num_channels=8
-    frequencystep=np.linspace(0,fs/2,1024)
-    speechbw,otherbw,bwArray=findBW(8)
+    num_channels=16
+    frequencystep=np.linspace(0,fs,2048)
+    #from testing earlier, each entry represents ~22Hz of BW, 180 steps to get to 4kHz
+    speechbw,otherbw,bwArray=findBW(num_channels)
+    print(bwArray)
     try:
-        music_file=wave.open("../FinalProject/GGST-Jam_verse.wav","rb")
+        music_file=wave.open("./Dna-More_singing.wav","rb")
     except FileNotFoundError:
         print("Error: file does not exist")
     else:
@@ -49,31 +52,61 @@ if __name__=="__main__":
             
             audio_int = np.frombuffer(raw_data, dtype=dtype)  # Integer array   
             udio_int = audio_int.reshape(-1, nchannels)  # Shape: (nframes, nchannels) 
+            print(f"shape of original data file is {udio_int.shape}")
             seconds=np.arange(0,udio_int.shape[0]/fs,1/fs)
-            fig,ax=plt.subplots()
-            # plt.plot(seconds,udio_int[::,0],seconds,udio_int[::,1])
-            # plt.xlabel("seconds")
-            # plt.ylabel("16 bit PCM Value from Wav file")
-            # plt.show()
-            rectangular_window=np.ones((2048,))
-            my_stft=scipy.signal.ShortTimeFFT(rectangular_window,100,fs,fft_mode="twosided")
+            window=scipy.signal.windows.hamming(2048,sym=False)
+            my_stft=scipy.signal.ShortTimeFFT(window,100,fs,fft_mode="twosided")
             right_channel=my_stft.stft(udio_int[::,0])
-            print(right_channel.shape)
             left_channel=my_stft.stft(udio_int[::,1])
-            channel_values=np.zeros(shape=(num_channels,right_channel.shape[1]))
-            plt.plot(np.abs(right_channel[::,0]))
+            channel_values_r=np.zeros(shape=(right_channel.shape),dtype=complex)
+            channel_values_l=np.zeros(shape=(right_channel.shape),dtype=complex)
+            sd.play(udio_int)
+            sd.wait()
+            #spectro_db= 10 * np.log10(np.fmax(right_spectro, 1e-4))  # limit range to -40 dB
             for i in range(0,right_channel.shape[1]):
+                current_index=0
                 channel_index=0
                 bwUsed=0
                 channelmag=0
-                for j in range(0,right_channel.shape[0]):
-                    bwUsed+=frequencystep[0]
+                for j in range(0,188): #amount of frequency steps until we hit 4kHz
+                    bwUsed+=frequencystep[1]
                     channelmag+=right_channel[j][i]
-                    if bwUsed>=bwArray[channel_index] and channel_index<num_channels-1:
-                        channel_values[channel_index][i]=channelmag
+                    if channel_index<=(num_channels-1) and bwUsed>=bwArray[channel_index]:
+                        channel_values_r[current_index:j,i]=channelmag
                         channel_index+=1
+                        current_index=j
                         bwUsed=0
                         channelmag=0
-
-
+                if j==187 and current_index!=j:
+                    channel_values_r[current_index:j,i]=channelmag
+            for i in range(0,right_channel.shape[1]): #run it back for the left channel i should've made this a function
+                current_index=0
+                channel_index=0
+                bwUsed=0
+                channelmag=0
+                for j in range(5,187): #amount of frequency steps until we hit 4kHz
+                    bwUsed+=frequencystep[1]
+                    channelmag+=right_channel[j][i]
+                    if channel_index<=num_channels-1 and (bwUsed>=bwArray[channel_index]
+                     or (bwArray[channel_index]-bwUsed)<(frequencystep[1])/2):
+                        channel_values_l[current_index:j,i]=channelmag
+                        channel_index+=1
+                        current_index=j
+                        bwUsed=0
+                        channelmag=0
+                    if j==187 and current_index!=j:
+                        channel_values_l[current_index:j,i]=channelmag
+            adjusted_right=my_stft.istft(channel_values_r)
+            img=plt.imshow(10*np.log10(np.abs(channel_values_r[0:180,::])**2),cmap="inferno"
+            ,aspect="auto",extent=[0,1,frequencystep[1]*180,0])
+            plt.colorbar(img)
             plt.show()
+            print(adjusted_right.shape)
+            adjusted_left=my_stft.istft(channel_values_l)
+            processed_song=np.zeros(shape=(adjusted_right.shape[0],2))
+            processed_song[::,0]=adjusted_right
+            processed_song[::,1]=adjusted_left
+            processed_song=processed_song*(1/1e5)
+            scipy.io.wavfile.write("8channelDna.wav",fs,(processed_song*5e4).astype(np.int16))
+            sd.play(processed_song)
+            sd.wait()
