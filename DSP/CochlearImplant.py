@@ -20,7 +20,7 @@ def findBW(num_channels):
 
 if __name__=="__main__":
     fs=44100
-    num_channels=16
+    num_channels=8
     frequencystep=np.linspace(0,fs,2048)
     #from testing earlier, each entry represents ~22Hz of BW, 180 steps to get to 4kHz
     speechbw,otherbw,bwArray=findBW(num_channels)
@@ -60,15 +60,15 @@ if __name__=="__main__":
             left_channel=my_stft.stft(udio_int[::,1])
             channel_values_r=np.zeros(shape=(right_channel.shape),dtype=complex)
             channel_values_l=np.zeros(shape=(right_channel.shape),dtype=complex)
-            sd.play(udio_int)
-            sd.wait()
+            # sd.play(udio_int)
+            # sd.wait()
             #spectro_db= 10 * np.log10(np.fmax(right_spectro, 1e-4))  # limit range to -40 dB
             for i in range(0,right_channel.shape[1]):
                 current_index=0
                 channel_index=0
                 bwUsed=0
                 channelmag=0
-                for j in range(0,188): #amount of frequency steps until we hit 4kHz
+                for j in range(5,188): #amount of frequency steps until we hit 4kHz
                     bwUsed+=frequencystep[1]
                     channelmag+=right_channel[j][i]
                     if channel_index<=(num_channels-1) and bwUsed>=bwArray[channel_index]:
@@ -84,7 +84,7 @@ if __name__=="__main__":
                 channel_index=0
                 bwUsed=0
                 channelmag=0
-                for j in range(5,187): #amount of frequency steps until we hit 4kHz
+                for j in range(5,188): #amount of frequency steps until we hit 4kHz
                     bwUsed+=frequencystep[1]
                     channelmag+=right_channel[j][i]
                     if channel_index<=num_channels-1 and (bwUsed>=bwArray[channel_index]
@@ -106,7 +106,7 @@ if __name__=="__main__":
             processed_song=np.zeros(shape=(adjusted_right.shape[0],2))
             processed_song[::,0]=adjusted_right
             processed_song[::,1]=adjusted_left
-            processed_song=processed_song*(1/1e5)
+            processed_song=processed_song*(1/1e5) #on my computer it sounded really loud
             scipy.io.wavfile.write("8channelDna.wav",fs,(processed_song*5e4).astype(np.int16))
             sd.play(processed_song)
             sd.wait()
