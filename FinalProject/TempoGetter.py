@@ -8,8 +8,7 @@ import scipy
 import librosa
 import libfmp
 import cmath
-#using this site for reading wav file into np array https://www.w3reference.com/blog/python-write-a-wav-file-into-numpy-float-array/
-#using these from a stack exchange thread https://stackoverflow.com/questions/25191620/creating-lowpass-filter-in-scipy-understanding-methods-and-units
+#using this site for reading wav file into np array https://www.w3reference.com/blog/python-write-a-wav-file-into-numpy-float-array
 #my own FFT from lab 4
 def FFT2(sequence):
     N=len(sequence)
@@ -25,24 +24,30 @@ def FFT2(sequence):
         y_current[j]=y_even[j]+(omega**j)*y_odd[j]
         y_current[j+N//2]=y_even[j]-(omega**j)*y_odd[j]
     return y_current
-def butter_lowpass(cutoff, fs, order=5):
-    return scipy.signal.butter(order, cutoff, fs=fs, btype='low', analog=False)
-
-def butter_lowpass_filter(data, cutoff, fs, order=5):
-    b, a = butter_lowpass(cutoff, fs, order=order)
-    y = scipy.signal.lfilter(b, a, data)
-    return y
 def my_stft(signal,num_samples,Hop,window_length,window):
-    stft_out=np.zeros(shape=(num_samples//2+1,signal.shape[0]//hop+1),dtype=complex)
+    stft_out=np.zeros(shape=(num_samples//2+1,signal.shape[0]//Hop+1),dtype=complex)
+    print(stft_out.shape)
     index=0
     window=scipy.signal.windows.hann(window_length,sym=False)
     for i in range(0,stft_out.shape[1]):
-        stft_out[::,index]=FFT2(np.multiply(signal[index:index+num_samples],window))
+        if signal.shape[0]-index>2048:
+            intermediate=FFT2(np.multiply(signal[index:(index+num_samples)],window))
+            stft_out[::,i]=intermediate[:stft_out.shape[0],]
+        else:
+            pad_amount=(2048-(signal.shape[0]-index))//2
+            print(f"padding by {pad_amount}")
+            padded_signal=np.zeros(shape=(2048,))
+            print(f"length of signal we have left {signal.shape[0]-index}")
+            padded_signal[pad_amount:(pad_amount+(signal.shape[0]-index))]=signal[index:signal.shape[0]]
+            print(padded_signal.shape)
+            intermediate=FFT2(np.multiply(padded_signal,window))
+            stft_out[::,i]=intermediate[:stft_out.shape[0],]
         index+=Hop
     return stft_out
 
 #copied functions i needed in from https://meinardmueller.github.io/libfmp and modified them
 #also https://www.audiolabs-erlangen.de/resources/MIR/FMP/C6/C6S2_TempogramFourier.html
+#average,novelty spectrum, tempo analysis and resample signal were all used and modified from those 2 sources
 def compute_local_average(x, M):
     """Compute local average of signal
 
@@ -81,11 +86,11 @@ def compute_novelty_spectrum(x, Fs=1, N=1024, H=256, gamma=100.0, M=10, norm=Tru
         novelty_spectrum (np.ndarray): Energy-based novelty function
         Fs_feature (scalar): Feature rate
     """
-    print(f'Library STFT took parameters shape of input {x.shape} num samples={N}, hop {H}, Window len {N}')
+    #print(f'Library STFT took parameters shape of input {x.shape} num samples={N}, hop {H}, Window len {N}')
     X = librosa.stft(x, n_fft=N, hop_length=H, win_length=N, window='hann')
-    print(f'after doing library stft, get an output with shape {X.shape}')
-    #testing my STFT
-
+    #print(f'after doing library stft, get an output with shape {X.shape}')
+    #testing my STFT, It works but do not use, very slow
+    #X=my_stft(x,N,H,N,'hann')
     Fs_feature = Fs / H
     Y = np.log(1 + gamma * np.abs(X))
     Y_diff = np.diff(Y)
@@ -188,16 +193,14 @@ if __name__=="__main__":
             udio_int = audio_int.reshape(-1, nchannels)  # Shape: (nframes, nchannels) 
             fig,ax=plt.subplots(2,1)
             plt.xlabel("seconds") 
+            plt.ylabel("Tempo (BPM)")
             fs=22050
             cutoff=10
             nov_func,fs_nov=compute_novelty_spectrum(udio_int[::,1].astype(float),fs,N=2048,
             H=128,gamma=100,M=10,norm=True)
             fs=100
-            #resample function to 200 samples/sec
             resampled_func,fs=resample_signal(nov_func,fs_nov,fs,norm=True,time_max_sec=udio_int.shape[0]/44100)
-            print(resampled_func.shape)
             test_tempo=np.arange(50,250,1)
-            #print(down_sampled.shape)
             time=np.linspace(0,resampled_func.shape[0]/fs,resampled_func.shape[0])
             picture=tempo_analysis(resampled_func,fs,fs,cutoff,test_tempo)
             ax[0].plot(time,resampled_func)
